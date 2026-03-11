@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useRef, useEffect, type ReactNode } from 'react'
 import type { Track } from '../data/tracks'
+import YouTubePlayer from '../components/YouTubePlayer'
 
 export type View = 'inicio' | 'explorar' | 'biblioteca'
 export type RepeatMode = 'off' | 'one' | 'all'
@@ -12,7 +13,6 @@ export interface Playlist {
 }
 
 interface AppContextType {
-  // Sidebar
   sidebarCollapsed: boolean
   toggleSidebar: () => void
   currentView: View
@@ -23,21 +23,13 @@ interface AppContextType {
   selectPlaylist: (id: string | null) => void
   addTrackToPlaylist: (playlistId: string, trackId: string) => void
   removeTrackFromPlaylist: (playlistId: string, trackId: string) => void
-
-  // Search
   searchQuery: string
   setSearchQuery: (query: string) => void
-
-  // Categories
   selectedCategory: string | null
   setSelectedCategory: (category: string | null) => void
-
-  // Library
   likedTrackIds: Set<string>
   toggleLike: (trackId: string) => void
   isLiked: (trackId: string) => boolean
-
-  // Queue
   queue: Track[]
   queueIndex: number
   addToQueue: (track: Track) => void
@@ -45,8 +37,6 @@ interface AppContextType {
   removeFromQueue: (index: number) => void
   playFromQueue: (tracks: Track[], startIndex: number) => void
   clearQueue: () => void
-
-  // Player
   nowPlaying: Track | null
   isPlaying: boolean
   progress: number
@@ -62,8 +52,6 @@ interface AppContextType {
   setVolume: (vol: number) => void
   toggleShuffle: () => void
   toggleRepeat: () => void
-
-  // UI
   showCastingModal: boolean
   setShowCastingModal: (show: boolean) => void
   showProfileDropdown: boolean
@@ -78,6 +66,10 @@ const FALLBACK_AUDIO = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-
 
 function getTrackAudioUrl(track: Track): string {
   return track.audioUrl || FALLBACK_AUDIO
+}
+
+function useYouTube(track: Track | null): boolean {
+  return !!(track?.youtubeVideoId)
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
@@ -108,8 +100,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState<{ track: Track } | null>(null)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const youtubePlayerRef = useRef<YT.Player | null>(null)
   const queueRef = useRef({ queue: [] as Track[], queueIndex: 0 })
   queueRef.current = { queue, queueIndex }
+
+  const useYT = useYouTube(nowPlaying)
+
+  const startPlayback = useCallback((track: Track) => {
+    if (track.youtubeVideoId) {
+      audioRef.current?.pause()
+      setProgress(0)
+      setDuration(0)
+    } else {
+      youtubePlayerRef.current?.pauseVideo?.()
+      const audio = new Audio(getTrackAudioUrl(track))
+      audioRef.current?.pause()
+      audioRef.current = audio
+      audio.play().catch(() => {})
+    }
+  }, [])
 
   const toggleLike = useCallback((trackId: string) => {
     setLikedTrackIds((prev) => {
@@ -136,12 +145,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (queue.length === 0) {
       setNowPlaying(track)
       setIsPlaying(true)
-      const audio = new Audio(getTrackAudioUrl(track))
-      audioRef.current?.pause()
-      audioRef.current = audio
-      audio.play().catch(() => {})
+      startPlayback(track)
     }
-  }, [])
+  }, [queue.length, startPlayback])
 
   const removeFromQueue = useCallback((index: number) => {
     setQueue((prev) => prev.filter((_, i) => i !== index))
@@ -154,11 +160,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setQueueIndex(startIndex)
     setNowPlaying(track)
     setIsPlaying(true)
-    const audio = new Audio(getTrackAudioUrl(track))
-    audioRef.current?.pause()
-    audioRef.current = audio
-    audio.play().catch(() => {})
-  }, [])
+    startPlayback(track)
+  }, [startPlayback])
 
   const clearQueue = useCallback(() => {
     setQueue([])
@@ -191,22 +194,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       if (nowPlaying?.id === track.id) {
         setIsPlaying((prev) => {
-          const audio = audioRef.current
-          if (audio) prev ? audio.pause() : audio.play()
+          if (track.youtubeVideoId) {
+            const player = youtubePlayerRef.current
+            if (player) prev ? player.pauseVideo() : player.playVideo()
+          } else {
+            const audio = audioRef.current
+            if (audio) prev ? audio.pause() : audio.play()
+          }
           return !prev
         })
         return
       }
-      audioRef.current?.pause()
       setQueue([track])
       setQueueIndex(0)
       setNowPlaying(track)
       setIsPlaying(true)
-      const audio = new Audio(getTrackAudioUrl(track))
-      audioRef.current = audio
-      audio.play().catch(() => {})
+      startPlayback(track)
     },
-    [nowPlaying?.id, addToQueue]
+    [nowPlaying?.id, addToQueue, startPlayback]
   )
 
   const goToNext = useCallback(() => {
@@ -215,7 +220,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     let nextIndex: number
     if (repeat === 'one') {
       setProgress(0)
-      if (audioRef.current) {
+      if (useYT) {
+        youtubePlayerRef.current?.seekTo?.(0, true)
+        youtubePlayerRef.current?.playVideo?.()
+      } else if (audioRef.current) {
         audioRef.current.currentTime = 0
         audioRef.current.play()
       }
@@ -237,16 +245,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setQueueIndex(nextIndex)
     setNowPlaying(q[nextIndex])
     setProgress(0)
-    const audio = new Audio(getTrackAudioUrl(q[nextIndex]))
-    audioRef.current?.pause()
-    audioRef.current = audio
-    audio.play().catch(() => {})
-  }, [repeat, shuffle])
+    startPlayback(q[nextIndex])
+  }, [repeat, shuffle, startPlayback, useYT])
 
   const goToPrevious = useCallback(() => {
     if (progress > 3) {
       setProgress(0)
-      if (audioRef.current) {
+      if (useYT) {
+        youtubePlayerRef.current?.seekTo?.(0, true)
+        youtubePlayerRef.current?.playVideo?.()
+      } else if (audioRef.current) {
         audioRef.current.currentTime = 0
         audioRef.current.play()
       }
@@ -258,15 +266,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setQueueIndex(prevIndex)
     setNowPlaying(q[prevIndex])
     setProgress(0)
-    const audio = new Audio(getTrackAudioUrl(q[prevIndex]))
-    audioRef.current?.pause()
-    audioRef.current = audio
-    audio.play().catch(() => {})
-  }, [progress])
+    startPlayback(q[prevIndex])
+  }, [progress, startPlayback, useYT])
 
   useEffect(() => {
     const audio = audioRef.current
-    if (!audio) return
+    if (!audio || useYT) return
     const onTimeUpdate = () => setProgress(audio.currentTime)
     const onLoadedMetadata = () => setDuration(audio.duration)
     const onEnded = () => goToNext()
@@ -278,7 +283,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       audio.removeEventListener('loadedmetadata', onLoadedMetadata)
       audio.removeEventListener('ended', onEnded)
     }
-  }, [nowPlaying, goToNext])
+  }, [nowPlaying, goToNext, useYT])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -286,25 +291,36 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [volume, nowPlaying])
 
   useEffect(() => {
-    return () => audioRef.current?.pause()
+    return () => {
+      audioRef.current?.pause()
+    }
   }, [])
 
   const togglePlayPause = useCallback(() => {
     if (!nowPlaying) return
     setIsPlaying((prev) => {
-      const audio = audioRef.current
-      if (audio) prev ? audio.pause() : audio.play()
+      if (useYT) {
+        const player = youtubePlayerRef.current
+        if (player) prev ? player.pauseVideo() : player.playVideo()
+      } else {
+        const audio = audioRef.current
+        if (audio) prev ? audio.pause() : audio.play()
+      }
       return !prev
     })
-  }, [nowPlaying])
+  }, [nowPlaying, useYT])
 
   const seek = useCallback((time: number) => {
-    const audio = audioRef.current
-    if (audio) {
-      audio.currentTime = time
-      setProgress(time)
+    if (useYT) {
+      youtubePlayerRef.current?.seekTo?.(time, true)
+    } else {
+      const audio = audioRef.current
+      if (audio) {
+        audio.currentTime = time
+        setProgress(time)
+      }
     }
-  }, [])
+  }, [useYT])
 
   const setVolume = useCallback((vol: number) => {
     setVolumeState(Math.max(0, Math.min(1, vol)))
@@ -323,6 +339,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const selectPlaylist = useCallback((id: string | null) => setSelectedPlaylistId(id), [])
+
+  const handleYoutubeReady = useCallback((player: YT.Player) => {
+    youtubePlayerRef.current = player
+  }, [])
+
+  const handleYoutubeStateChange = useCallback((state: number) => {
+    if (state === 0) goToNext()
+  }, [goToNext])
+
+  const handleYoutubeProgress = useCallback((currentTime: number, dur: number) => {
+    setProgress(currentTime)
+    setDuration(dur)
+  }, [])
 
   const value: AppContextType = {
     sidebarCollapsed,
@@ -372,7 +401,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setShowAddToPlaylistModal,
   }
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>
+  return (
+    <AppContext.Provider value={value}>
+      {children}
+      <YouTubePlayer
+        videoId={nowPlaying?.youtubeVideoId ?? null}
+        isPlaying={isPlaying}
+        volume={volume}
+        progress={progress}
+        onReady={handleYoutubeReady}
+        onStateChange={handleYoutubeStateChange}
+        onProgress={handleYoutubeProgress}
+      />
+    </AppContext.Provider>
+  )
 }
 
 export function useApp() {
