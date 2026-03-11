@@ -14,8 +14,8 @@ export default function MusicSection() {
 
   useEffect(() => {
     if (!searchQuery.trim()) {
-      getChartTracks(30)
-        .then(setChartTracks)
+      getChartTracks(100)
+        .then((res) => setChartTracks(res.tracks))
         .catch(() => setChartTracks([]))
     } else {
       setChartTracks([])

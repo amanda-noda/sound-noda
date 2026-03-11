@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import type { Track } from '../data/tracks'
+import { formatDuration } from '../data/tracks'
 import { useApp } from '../context/AppContext'
 import './MusicCard.css'
 
@@ -85,7 +86,10 @@ export default function MusicCard({ track }: MusicCardProps) {
       </div>
       <h3 className="card-title">{track.title}</h3>
       <p className="card-meta">
-        {track.type} • {track.artist}
+        {track.artist}
+        {(track.durationFormatted ?? (track.duration ? formatDuration(track.duration) : null)) && (
+          <> • {track.durationFormatted ?? formatDuration(track.duration!)}</>
+        )}
         {track.views && ` • ${track.views}`}
       </p>
     </div>

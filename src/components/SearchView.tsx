@@ -25,7 +25,10 @@ export default function SearchView() {
   const [apiTracks, setApiTracks] = useState<Track[]>([])
   const [apiAlbums, setApiAlbums] = useState<ApiAlbum[]>([])
   const [apiArtists, setApiArtists] = useState<ApiArtist[]>([])
+  const [tracksTotal, setTracksTotal] = useState(0)
+  const [tracksNextIndex, setTracksNextIndex] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [loadingAlbumId, setLoadingAlbumId] = useState<string | null>(null)
   const [loadingArtistId, setLoadingArtistId] = useState<string | null>(null)
 
@@ -36,26 +39,32 @@ export default function SearchView() {
       setApiTracks([])
       setApiAlbums([])
       setApiArtists([])
+      setTracksTotal(0)
+      setTracksNextIndex(null)
       return
     }
     const controller = new AbortController()
     setLoading(true)
     Promise.all([
-      searchTracks(query, 30),
-      searchAlbums(query, 20),
-      searchArtists(query, 20),
+      searchTracks(query, 50, 0),
+      searchAlbums(query, 30),
+      searchArtists(query, 30),
     ])
       .then(([tracksRes, albumsRes, artistsRes]) => {
         if (controller.signal.aborted) return
         setApiTracks(tracksRes.tracks)
         setApiAlbums(albumsRes.albums)
         setApiArtists(artistsRes.artists)
+        setTracksTotal(tracksRes.total)
+        setTracksNextIndex(tracksRes.next)
       })
       .catch(() => {
         if (!controller.signal.aborted) {
           setApiTracks([])
           setApiAlbums([])
           setApiArtists([])
+          setTracksTotal(0)
+          setTracksNextIndex(null)
           showToast('Erro ao buscar. Verifique se a API está rodando.')
         }
       })
@@ -64,6 +73,20 @@ export default function SearchView() {
       })
     return () => controller.abort()
   }, [query, showToast])
+
+  const handleLoadMoreTracks = useCallback(async () => {
+    if (!query || tracksNextIndex === null || loadingMore) return
+    setLoadingMore(true)
+    try {
+      const res = await searchTracks(query, 50, tracksNextIndex)
+      setApiTracks((prev) => [...prev, ...res.tracks])
+      setTracksNextIndex(res.next)
+    } catch {
+      showToast('Erro ao carregar mais músicas.')
+    } finally {
+      setLoadingMore(false)
+    }
+  }, [query, tracksNextIndex, loadingMore, showToast])
 
   const handleAlbumClick = useCallback(
     async (album: ApiAlbum) => {
@@ -204,6 +227,15 @@ export default function SearchView() {
                     <MusicCard key={track.id} track={track} />
                   ))}
                 </div>
+                {isApiMode && tracksNextIndex !== null && (
+                  <button
+                    className="load-more-btn"
+                    onClick={handleLoadMoreTracks}
+                    disabled={loadingMore}
+                  >
+                    {loadingMore ? 'Carregando...' : `Carregar mais (${tracksTotal - tracks.length} restantes)`}
+                  </button>
+                )}
               </>
             ) : (
               <p className="no-results">Nenhuma música encontrada.</p>
