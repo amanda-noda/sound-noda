@@ -35,11 +35,6 @@ export default function Sidebar() {
         </button>
         {!sidebarCollapsed && (
           <div className="logo">
-            <div className="logo-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </div>
             <span>Sound Noda</span>
           </div>
         )}
