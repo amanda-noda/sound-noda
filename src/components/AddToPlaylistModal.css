@@ -1,21 +1,24 @@
 .add-to-playlist-modal {
-  background: var(--bg-tertiary);
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 400px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  max-width: 420px;
   max-height: 80vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  box-shadow: var(--shadow-lg);
 }
 
 .add-to-playlist-modal h3 {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-sm);
   font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .track-name {
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-md);
   font-size: 0.875rem;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -26,7 +29,7 @@
 .playlist-list {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-md);
 }
 
 .playlist-option {
@@ -34,16 +37,16 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 12px 16px;
+  padding: var(--space-md) var(--space-lg);
   text-align: left;
   color: var(--text-primary);
   font-size: 0.9375rem;
-  border-radius: 8px;
-  transition: background 0.2s;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
 }
 
 .playlist-option:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-hover);
 }
 
 .playlist-option .check {

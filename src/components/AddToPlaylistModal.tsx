@@ -8,7 +8,7 @@ interface AddToPlaylistModalProps {
 }
 
 export default function AddToPlaylistModal({ track, onClose }: AddToPlaylistModalProps) {
-  const { playlists, addTrackToPlaylist } = useApp()
+  const { playlists, addTrackToPlaylist, showToast } = useApp()
 
   const playlistsWithTrack = new Set(
     playlists.filter((p) => p.trackIds.includes(track.id)).map((p) => p.id)
@@ -29,6 +29,7 @@ export default function AddToPlaylistModal({ track, onClose }: AddToPlaylistModa
                 onClick={() => {
                   if (isInPlaylist) return
                   addTrackToPlaylist(playlist.id, track.id)
+                  showToast(`Adicionado a ${playlist.title}`)
                   onClose()
                 }}
               >

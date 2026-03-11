@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar'
 import MainContent from './components/MainContent'
 import NowPlaying from './components/NowPlaying'
 import AddToPlaylistModal from './components/AddToPlaylistModal'
+import Toast from './components/Toast'
 import './App.css'
 
 function AppContent() {
@@ -20,6 +21,7 @@ function AppContent() {
           onClose={() => setShowAddToPlaylistModal(null)}
         />
       )}
+      <Toast />
     </>
   )
 }

@@ -58,6 +58,8 @@ interface AppContextType {
   setShowProfileDropdown: (show: boolean) => void
   showAddToPlaylistModal: { track: Track } | null
   setShowAddToPlaylistModal: (v: { track: Track } | null) => void
+  toast: string | null
+  showToast: (message: string) => void
 }
 
 const AppContext = createContext<AppContextType | null>(null)
@@ -98,6 +100,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [showCastingModal, setShowCastingModal] = useState(false)
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
   const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState<{ track: Track } | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
+
+  const showToast = useCallback((message: string) => {
+    setToast(message)
+    setTimeout(() => setToast(null), 3000)
+  }, [])
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const youtubePlayerRef = useRef<YT.Player | null>(null)
@@ -399,6 +407,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setShowProfileDropdown,
     showAddToPlaylistModal,
     setShowAddToPlaylistModal,
+    toast,
+    showToast,
   }
 
   return (

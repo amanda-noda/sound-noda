@@ -23,6 +23,9 @@ export default function PlaylistView() {
         </div>
         {tracks.length > 0 && (
           <button className="play-all-btn" onClick={() => playFromQueue(tracks, 0)}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
             Tocar tudo
           </button>
         )}

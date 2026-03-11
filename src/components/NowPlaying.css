@@ -3,21 +3,22 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 90px;
+  height: var(--now-playing-height);
   background: var(--bg-secondary);
-  border-top: 1px solid rgba(37, 99, 235, 0.2);
+  border-top: 1px solid rgba(99, 102, 241, 0.15);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  gap: 24px;
+  padding: 0 var(--space-lg);
+  gap: var(--space-lg);
   z-index: 50;
+  backdrop-filter: blur(12px);
 }
 
 .now-playing-track {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-md);
   flex: 0 0 30%;
   min-width: 0;
 }
@@ -25,15 +26,16 @@
 .now-playing-cover {
   width: 56px;
   height: 56px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
   flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
 
 .now-playing-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-xs);
   min-width: 0;
 }
 
@@ -55,9 +57,9 @@
 
 .like-btn {
   color: var(--text-secondary);
-  padding: 8px;
+  padding: var(--space-sm);
   flex-shrink: 0;
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
 }
 
 .like-btn:hover {
@@ -73,24 +75,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
   max-width: 600px;
 }
 
 .control-buttons {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .control-btn {
   color: var(--text-secondary);
-  padding: 8px;
+  padding: var(--space-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
 }
 
 .control-btn:hover {
@@ -120,8 +122,8 @@
 }
 
 .play-pause-btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--gradient-accent);
   color: white;
@@ -129,17 +131,18 @@
   align-items: center;
   justify-content: center;
   transition: transform var(--transition-fast), box-shadow var(--transition-smooth);
-  box-shadow: 0 4px 12px var(--accent-soft);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
 }
 
 .play-pause-btn:hover {
   transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
 }
 
 .progress-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-md);
   width: 100%;
 }
 
@@ -153,7 +156,7 @@
   flex: 1;
   height: 4px;
   background: var(--bg-tertiary);
-  border-radius: 2px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   position: relative;
 }
@@ -165,7 +168,7 @@
 .progress-fill {
   height: 100%;
   background: var(--gradient-accent);
-  border-radius: 2px;
+  border-radius: var(--radius-full);
   transition: width 0.1s linear;
 }
 
@@ -173,7 +176,7 @@
   flex: 0 0 15%;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-md);
   color: var(--text-secondary);
 }
 
@@ -182,7 +185,7 @@
   -webkit-appearance: none;
   height: 4px;
   background: var(--bg-tertiary);
-  border-radius: 2px;
+  border-radius: var(--radius-full);
   outline: none;
 }
 

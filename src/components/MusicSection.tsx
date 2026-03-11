@@ -1,12 +1,26 @@
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useEffect, useState } from 'react'
 import { recentTracks } from '../data/tracks'
+import type { Track } from '../data/tracks'
 import { useApp } from '../context/AppContext'
+import { getChartTracks } from '../services/api'
 import MusicCard from './MusicCard'
 import './MusicSection.css'
 
 export default function MusicSection() {
   const { searchQuery, selectedCategory, playFromQueue } = useApp()
   const carouselRef = useRef<HTMLDivElement>(null)
+  const chartRef = useRef<HTMLDivElement>(null)
+  const [chartTracks, setChartTracks] = useState<Track[]>([])
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      getChartTracks(30)
+        .then(setChartTracks)
+        .catch(() => setChartTracks([]))
+    } else {
+      setChartTracks([])
+    }
+  }, [searchQuery])
 
   const filteredTracks = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
@@ -115,6 +129,50 @@ export default function MusicSection() {
           )}
         </div>
       </div>
+
+      {!searchQuery.trim() && chartTracks.length > 0 && (
+        <div className="section-block chart-section">
+          <div className="section-header">
+            <h2 className="section-title">Em alta</h2>
+            <div className="section-actions">
+              <button
+                className="play-all-btn"
+                onClick={() => playFromQueue(chartTracks, 0)}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                Tocar tudo
+              </button>
+              <div className="section-nav">
+                <button
+                  className="nav-arrow"
+                  aria-label="Anterior"
+                  onClick={() => chartRef.current?.scrollBy({ left: -280, behavior: 'smooth' })}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                  </svg>
+                </button>
+                <button
+                  className="nav-arrow"
+                  aria-label="Próximo"
+                  onClick={() => chartRef.current?.scrollBy({ left: 280, behavior: 'smooth' })}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="tracks-carousel" ref={chartRef}>
+            {chartTracks.map((track) => (
+              <MusicCard key={track.id} track={track} />
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   )
 }

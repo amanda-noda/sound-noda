@@ -6,10 +6,12 @@ export default function SearchBar() {
   const {
     searchQuery,
     setSearchQuery,
+    setSelectedCategory,
     showCastingModal,
     setShowCastingModal,
     showProfileDropdown,
     setShowProfileDropdown,
+    showToast,
   } = useApp()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -35,6 +37,7 @@ export default function SearchBar() {
           className="search-input"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setSelectedCategory(null)}
           onKeyDown={(e) => e.key === 'Escape' && setSearchQuery('')}
           autoComplete="off"
         />
@@ -75,9 +78,33 @@ export default function SearchBar() {
                 <div className="avatar avatar-lg" />
                 <span>amanda fernandes</span>
               </div>
-              <button className="dropdown-item">Conta</button>
-              <button className="dropdown-item">Perfil</button>
-              <button className="dropdown-item">Sair</button>
+              <button
+                className="dropdown-item"
+                onClick={() => {
+                  setShowProfileDropdown(false)
+                  showToast('Configurações da conta')
+                }}
+              >
+                Conta
+              </button>
+              <button
+                className="dropdown-item"
+                onClick={() => {
+                  setShowProfileDropdown(false)
+                  showToast('Editar perfil')
+                }}
+              >
+                Perfil
+              </button>
+              <button
+                className="dropdown-item"
+                onClick={() => {
+                  setShowProfileDropdown(false)
+                  showToast('Você saiu da sua conta')
+                }}
+              >
+                Sair
+              </button>
             </div>
           )}
         </div>

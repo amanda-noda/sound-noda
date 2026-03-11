@@ -1,0 +1,209 @@
+.search-view {
+  padding: 0 0 var(--space-2xl);
+}
+
+.search-results-header {
+  margin-bottom: var(--space-lg);
+}
+
+.search-results-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.02em;
+}
+
+.search-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.search-tab {
+  padding: 10px 20px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+.search-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.search-tab.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.search-tab-content {
+  position: relative;
+}
+
+.search-tab-content .play-all-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 10px 22px;
+  background: var(--gradient-accent);
+  color: white;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-lg);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+}
+
+.search-tab-content .play-all-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+.search-tracks-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--card-gap);
+  padding-top: 56px;
+}
+
+.search-albums-grid,
+.search-artists-grid,
+.search-playlists-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--card-gap-lg);
+}
+
+.album-card,
+.artist-card,
+.playlist-card {
+  width: var(--card-size);
+  min-width: var(--card-size);
+  flex: 0 0 var(--card-size);
+  cursor: pointer;
+  transition: transform var(--transition-smooth);
+  position: relative;
+}
+
+.album-card:hover,
+.artist-card:hover,
+.playlist-card:hover {
+  transform: translateY(-4px);
+}
+
+.album-card img,
+.artist-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-smooth);
+}
+
+.album-card:hover img,
+.artist-card:hover img {
+  box-shadow: var(--shadow-md);
+}
+
+.album-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.album-name,
+.artist-name,
+.playlist-name {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.artist-name {
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.album-artist,
+.artist-meta,
+.playlist-meta {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.playlist-cover {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  border: 1px solid rgba(99, 102, 241, 0.08);
+}
+
+.playlist-icon {
+  color: var(--text-muted);
+}
+
+.playlist-name {
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.search-view .no-results {
+  padding: var(--space-2xl) 0;
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.search-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl) 0;
+  gap: var(--space-md);
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--bg-tertiary);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.album-card.loading,
+.artist-card.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.album-card.loading::after,
+.artist-card.loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-md);
+}

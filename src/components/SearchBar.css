@@ -2,23 +2,24 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 32px;
-  gap: 24px;
+  padding: var(--space-lg) var(--space-xl);
+  gap: var(--space-lg);
   position: sticky;
   top: 0;
   z-index: 10;
-  background: transparent;
+  background: linear-gradient(180deg, rgba(8, 12, 20, 0.95) 0%, transparent 100%);
+  backdrop-filter: blur(12px);
 }
 
 .search-input-wrapper {
   flex: 1;
-  max-width: 400px;
+  max-width: 420px;
   position: relative;
 }
 
 .search-icon {
   position: absolute;
-  left: 16px;
+  left: var(--space-lg);
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-muted);
@@ -27,14 +28,14 @@
 
 .search-input {
   width: 100%;
-  padding: 12px 40px 12px 48px;
+  padding: 12px 44px 12px 52px;
   background: var(--bg-tertiary);
   border: 1px solid transparent;
   border-radius: var(--radius-full);
   color: var(--text-primary);
   font-size: 0.9375rem;
   outline: none;
-  transition: background 0.2s;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .search-input::placeholder {
@@ -43,21 +44,21 @@
 
 .search-input:focus {
   background: var(--bg-hover);
-  border: 1px solid rgba(37, 99, 235, 0.25);
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 .search-clear {
   position: absolute;
-  right: 12px;
+  right: var(--space-md);
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-muted);
-  padding: 4px;
+  padding: var(--space-xs);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s, background 0.2s;
+  transition: color var(--transition-fast), background var(--transition-fast);
 }
 
 .search-clear:hover {
@@ -68,17 +69,17 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .icon-btn {
   color: var(--text-secondary);
-  padding: 8px;
-  border-radius: 50%;
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s, background 0.2s;
+  transition: color var(--transition-fast), background var(--transition-fast);
 }
 
 .icon-btn:hover {
@@ -95,10 +96,11 @@
 }
 
 .avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent) 0%, #3b82f6 100%);
+  background: var(--gradient-accent);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .avatar-lg {
@@ -108,80 +110,83 @@
 
 .profile-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + var(--space-sm));
   right: 0;
-  min-width: 200px;
-  background: var(--bg-tertiary);
-  border-radius: 8px;
-  padding: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  min-width: 220px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  box-shadow: var(--shadow-lg);
   z-index: 100;
+  border: 1px solid rgba(99, 102, 241, 0.1);
 }
 
 .dropdown-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 8px;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: var(--space-sm);
 }
 
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 10px 12px;
+  padding: var(--space-md) var(--space-lg);
   text-align: left;
   color: var(--text-primary);
   font-size: 0.9375rem;
-  border-radius: 4px;
-  transition: background 0.2s;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
 }
 
 .dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-hover);
 }
 
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
 .casting-modal {
-  background: var(--bg-tertiary);
-  border-radius: 12px;
-  padding: 24px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
   max-width: 400px;
+  border: 1px solid rgba(99, 102, 241, 0.12);
 }
 
 .casting-modal h3 {
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-md);
   font-size: 1.25rem;
 }
 
 .casting-modal p {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-sm);
   color: var(--text-secondary);
 }
 
 .casting-hint {
   font-size: 0.875rem;
   color: var(--text-muted);
-  margin-bottom: 20px;
+  margin-bottom: var(--space-lg);
 }
 
 .modal-close {
-  padding: 10px 20px;
-  background: var(--accent);
+  padding: 10px 22px;
+  background: var(--gradient-accent);
   color: white;
-  border-radius: 24px;
+  border-radius: var(--radius-full);
   font-weight: 600;
-  transition: background 0.2s;
+  transition: background var(--transition-fast);
 }
 
 .modal-close:hover {

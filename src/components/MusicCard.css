@@ -1,14 +1,18 @@
 .music-card {
-  flex: 0 0 200px;
-  padding: 16px;
-  border-radius: var(--radius-md);
+  position: relative;
+  flex: 0 0 var(--card-size);
+  width: var(--card-size);
+  min-width: var(--card-size);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
   transition: all var(--transition-smooth);
   background: transparent;
 }
 
 .music-card:hover {
   background: var(--bg-card);
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
 }
 
 .card-cover {
@@ -16,13 +20,13 @@
   aspect-ratio: 1;
   border-radius: var(--radius-md);
   overflow: hidden;
-  margin-bottom: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-sm);
   transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
 }
 
 .music-card:hover .card-cover {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
 .card-cover img {
@@ -37,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.65) 100%);
   opacity: 0;
   transition: opacity var(--transition-smooth);
   color: white;
@@ -53,20 +57,21 @@
 }
 
 .music-card:hover .play-overlay:hover svg {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .card-actions {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: var(--space-md);
+  right: var(--space-md);
+  z-index: 10;
 }
 
 .card-action-btn {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(10, 22, 18, 0.8);
+  background: rgba(8, 12, 20, 0.85);
   color: white;
   display: flex;
   align-items: center;
@@ -74,6 +79,7 @@
   opacity: 0;
   transition: all var(--transition-fast);
   backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .music-card:hover .card-action-btn {
@@ -87,25 +93,26 @@
 
 .card-context-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + var(--space-sm));
   right: 0;
-  margin-top: 6px;
   min-width: 220px;
-  background: var(--bg-secondary);
+  width: max-content;
+  background: var(--bg-elevated);
   border-radius: var(--radius-md);
-  padding: 6px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  z-index: 100;
-  border: 1px solid rgba(37, 99, 235, 0.15);
+  padding: var(--space-sm);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  border: 1px solid rgba(99, 102, 241, 0.12);
 }
 
 .card-context-menu button {
   display: block;
   width: 100%;
-  padding: 12px 16px;
+  padding: var(--space-md) var(--space-lg);
   text-align: left;
   color: var(--text-primary);
   font-size: 0.9375rem;
+  white-space: nowrap;
   border-radius: var(--radius-sm);
   transition: background var(--transition-fast);
 }
@@ -117,7 +124,7 @@
 .card-title {
   font-size: 0.9375rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-xs);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

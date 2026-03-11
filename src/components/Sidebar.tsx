@@ -18,11 +18,15 @@ export default function Sidebar() {
     addPlaylist,
     selectedPlaylistId,
     selectPlaylist,
+    showToast,
   } = useApp()
 
   const handleNewPlaylist = () => {
     const title = prompt('Nome da playlist:')
-    if (title !== null) addPlaylist(title)
+    if (title !== null) {
+      addPlaylist(title)
+      showToast('Playlist criada')
+    }
   }
 
   return (
