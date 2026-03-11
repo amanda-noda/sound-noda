@@ -1,0 +1,98 @@
+.music-section {
+  margin-bottom: 48px;
+}
+
+.section-header {
+  margin-bottom: 16px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed 0%, #e91429 100%);
+}
+
+.user-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.section-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.nav-arrow:hover {
+  background: #3e3e3e;
+}
+
+.nav-arrow:active {
+  transform: scale(0.95);
+}
+
+.tracks-carousel {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-tertiary) transparent;
+}
+
+.tracks-carousel::-webkit-scrollbar {
+  height: 8px;
+}
+
+.tracks-carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tracks-carousel::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+.tracks-carousel::-webkit-scrollbar-thumb:hover {
+  background: #3e3e3e;
+}
+
+.no-results {
+  color: var(--text-secondary);
+  padding: 48px 24px;
+  font-size: 1rem;
+}
